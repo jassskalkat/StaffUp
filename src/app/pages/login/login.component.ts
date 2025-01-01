@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,6 +6,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { LoginService } from '../../services/login.service';
+import { LoginResponse } from '../../models/login-response.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,20 +16,21 @@ import {
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  @Output() loginData = new EventEmitter();
-
   loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.loginData.emit(this.loginForm.value);
-    } else {
-      this.loginForm.markAllAsTouched();
-    }
+  private loginService: LoginService = inject(LoginService);
+  private router: Router = inject(Router);
 
-    console.log(this.loginForm.value);
+  onSubmit(): void {
+    this.loginService
+      .login(this.loginForm.value)
+      .subscribe(async (response: LoginResponse): Promise<void> => {
+        if (response.result) {
+          await this.router.navigate(['/dashboard']);
+        }
+      });
   }
 }
