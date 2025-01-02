@@ -9,10 +9,11 @@ import {
 import { LoginService } from '../../services/login.service';
 import { LoginResponse } from '../../models/login-response.interface';
 import { Router } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, NgOptimizedImage],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -30,6 +31,8 @@ export class LoginComponent {
       .subscribe(async (response: LoginResponse): Promise<void> => {
         if (response.result) {
           await this.router.navigate(['/dashboard']);
+        } else {
+          alert('Invalid username or password');
         }
       });
   }

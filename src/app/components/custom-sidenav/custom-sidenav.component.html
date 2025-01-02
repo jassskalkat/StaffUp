@@ -1,0 +1,40 @@
+<div class="sidenav-header">
+  <img
+    [height]="imageSize()"
+    [src]="imageSrc"
+    [width]="imageSize()"
+    alt="profile picture"
+  />
+  <div [class.hide-header-text]="sidenavCollapsed()" class="header-text">
+    <h2>Japneet Kalkat</h2>
+    <p>Software Developer</p>
+  </div>
+</div>
+
+<mat-nav-list>
+  @for (item of menuItems(); track item) {
+    <a
+      mat-list-item
+      [routerLink]="item.route"
+      routerLinkActive="selected-menu-item"
+      #routerLinkActive="routerLinkActive"
+      [activated]="routerLinkActive.isActive"
+    >
+      <mat-icon
+        [fontSet]="
+          routerLinkActive.isActive
+            ? 'material-icons'
+            : 'material-icons-outlined'
+        "
+        matListItemIcon
+      >
+        {{ item.icon }}
+      </mat-icon>
+      @if (!sidenavCollapsed()) {
+        <span matListItemTitle>
+          {{ item.label }}
+        </span>
+      }
+    </a>
+  }
+</mat-nav-list>
